@@ -32,7 +32,7 @@
 - (UILabel *)stateLabel
 {
     if (!_stateLabel) {
-        [self addSubview:_stateLabel = [UILabel mj_label]];
+        [self addSubview:_stateLabel = [UILabel label]];
     }
     return _stateLabel;
 }
@@ -40,7 +40,7 @@
 - (UILabel *)lastUpdatedTimeLabel
 {
     if (!_lastUpdatedTimeLabel) {
-        [self addSubview:_lastUpdatedTimeLabel = [UILabel mj_label]];
+        [self addSubview:_lastUpdatedTimeLabel = [UILabel label]];
     }
     return _lastUpdatedTimeLabel;
 }
@@ -77,36 +77,29 @@
         return;
     }
     
-    if (lastUpdatedTime) {
-        // 1.获得年月日
-        NSCalendar *calendar = [self currentCalendar];
-        NSUInteger unitFlags = NSCalendarUnitYear| NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitHour |NSCalendarUnitMinute;
-        NSDateComponents *cmp1 = [calendar components:unitFlags fromDate:lastUpdatedTime];
-        NSDateComponents *cmp2 = [calendar components:unitFlags fromDate:[NSDate date]];
-        
-        // 2.格式化日期
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        BOOL isToday = NO;
-        if ([cmp1 day] == [cmp2 day]) { // 今天
-            formatter.dateFormat = @" HH:mm";
-            isToday = YES;
-        } else if ([cmp1 year] == [cmp2 year]) { // 今年
-            formatter.dateFormat = @"MM-dd HH:mm";
-        } else {
-            formatter.dateFormat = @"yyyy-MM-dd HH:mm";
-        }
-        NSString *time = [formatter stringFromDate:lastUpdatedTime];
-        
-        // 3.显示日期
-        self.lastUpdatedTimeLabel.text = [NSString stringWithFormat:@"%@%@%@",
-                                          [NSBundle mj_localizedStringForKey:MJRefreshHeaderLastTimeText],
-                                          isToday ? [NSBundle mj_localizedStringForKey:MJRefreshHeaderDateTodayText] : @"",
-                                          time];
-    } else {
-        self.lastUpdatedTimeLabel.text = [NSString stringWithFormat:@"%@%@",
-                                          [NSBundle mj_localizedStringForKey:MJRefreshHeaderLastTimeText],
-                                          [NSBundle mj_localizedStringForKey:MJRefreshHeaderNoneLastDateText]];
-    }
+//    if (lastUpdatedTime) {
+//        // 1.获得年月日
+//        NSCalendar *calendar = [self currentCalendar];
+//        NSUInteger unitFlags = NSCalendarUnitYear| NSCalendarUnitMonth | NSCalendarUnitDay |NSCalendarUnitHour |NSCalendarUnitMinute;
+//        NSDateComponents *cmp1 = [calendar components:unitFlags fromDate:lastUpdatedTime];
+//        NSDateComponents *cmp2 = [calendar components:unitFlags fromDate:[NSDate date]];
+//        
+//        // 2.格式化日期
+//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//        if ([cmp1 day] == [cmp2 day]) { // 今天
+//            formatter.dateFormat = @"今天 HH:mm";
+//        } else if ([cmp1 year] == [cmp2 year]) { // 今年
+//            formatter.dateFormat = @"MM-dd HH:mm";
+//        } else {
+//            formatter.dateFormat = @"yyyy-MM-dd HH:mm";
+//        }
+//        NSString *time = [formatter stringFromDate:lastUpdatedTime];
+//        
+//        // 3.显示日期
+//        self.lastUpdatedTimeLabel.text = [NSString stringWithFormat:@"最后更新：%@", time];
+//    } else {
+//        self.lastUpdatedTimeLabel.text = @"最后更新：无记录";
+//    }
 }
 
 #pragma mark - 覆盖父类的方法
@@ -114,13 +107,10 @@
 {
     [super prepare];
     
-    // 初始化间距
-    self.labelLeftInset = MJRefreshLabelLeftInset;
-    
     // 初始化文字
-    [self setTitle:[NSBundle mj_localizedStringForKey:MJRefreshHeaderIdleText] forState:MJRefreshStateIdle];
-    [self setTitle:[NSBundle mj_localizedStringForKey:MJRefreshHeaderPullingText] forState:MJRefreshStatePulling];
-    [self setTitle:[NSBundle mj_localizedStringForKey:MJRefreshHeaderRefreshingText] forState:MJRefreshStateRefreshing];
+    [self setTitle:MJRefreshHeaderIdleText forState:MJRefreshStateIdle];
+    [self setTitle:MJRefreshHeaderPullingText forState:MJRefreshStatePulling];
+    [self setTitle:MJRefreshHeaderRefreshingText forState:MJRefreshStateRefreshing];
 }
 
 - (void)placeSubviews
